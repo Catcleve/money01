@@ -1,0 +1,9 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /web
+spring:
+  application:
+    name: 05web
+  dubbo:
+    registry: zookeeper://192.168.232.129:2181
