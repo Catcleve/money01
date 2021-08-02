@@ -26,7 +26,7 @@ public class BidInfoServiceImpl implements BidInfoService {
     private BidInfoMapper bidInfoMapper;
 
     @Resource
-    private RedisTemplate<String,Object> redisTemplate;
+    private RedisTemplate<String,String> redisTemplate;
 
     /**
      * 首页：查询投资总额
@@ -57,12 +57,13 @@ public class BidInfoServiceImpl implements BidInfoService {
      */
     @Override
     public Map<Object, Double> queryMoneyRank() {
+
 //        用来存放排行榜的的集合，使用LinkedHashMap保持排序
         HashMap<Object, Double> moneyRankMap = new LinkedHashMap<>(5);
 
-        ZSetOperations<String, Object> zSet = redisTemplate.opsForZSet();
-//        先在缓存中查询，如果没有从数据库中查出来放入缓存中
-        Set<Object> moneyRank = zSet.reverseRange("moneyRank", 0, -1);
+        ZSetOperations<String, String> zSet = redisTemplate.opsForZSet();
+//        先在缓存中查询，如果没有 就从数据库中查出来放入缓存中
+        Set<String> moneyRank = zSet.reverseRange("moneyRank", 0, -1);
 
         if (moneyRank == null||moneyRank.size() == 0) {
 //            从数据库查询
@@ -73,20 +74,20 @@ public class BidInfoServiceImpl implements BidInfoService {
             bidInfoAccounts.forEach(bidInfoAccount -> {
 //                获取并处理电话号码
                 String phone = bidInfoAccount.getUser().getPhone();
-                phone = phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
 //                放入缓存中
                 zSet.add("moneyRank", phone, bidInfoAccount.getBidMoney());
             });
-//            只保留前五个数据
-            zSet.removeRange("moneyRank", 0,zSet.zCard("moneyRank")-6);
-
             moneyRank = zSet.reverseRange("moneyRank", 0, 4);
         }
-        System.out.println("-----------缓存查询");
+//            每次查询只保留前五个数据（其他人投资的话会更新redis）
+        zSet.removeRange("moneyRank", 0,zSet.size("moneyRank")-6);
+
 //            缓存中有数据，放入map中
-        for (Object o : moneyRank) {
-            Double score = zSet.score("moneyRank", o);
-            moneyRankMap.put(o, score);
+        assert moneyRank != null;
+        for (String phone : moneyRank) {
+            Double score = zSet.score("moneyRank", phone);
+            phone = phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+            moneyRankMap.put(phone, score);
         }
         return moneyRankMap;
     }

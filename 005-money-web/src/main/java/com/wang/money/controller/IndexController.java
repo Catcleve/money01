@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import service.BidInfoService;
 import service.LoanInfoService;
 import service.UserService;
+import sun.net.www.http.HttpClient;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,6 +61,7 @@ public class IndexController {
         /*首页新手宝，因为还要查询其他的，这里把查询条件封装为map
         当属性没有互相关联时，使用map，有关联则使用object
         */
+
 
 //        新手包查询
         Map<String, Object> queryLoan = new HashMap<>(10);
