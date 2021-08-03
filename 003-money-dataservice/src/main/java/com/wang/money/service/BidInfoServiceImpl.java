@@ -80,7 +80,10 @@ public class BidInfoServiceImpl implements BidInfoService {
             moneyRank = zSet.reverseRange("moneyRank", 0, 4);
         }
 //            每次查询只保留前五个数据（其他人投资的话会更新redis）
-        zSet.removeRange("moneyRank", 0,zSet.size("moneyRank")-6);
+        Long size = zSet.size("moneyRank");
+        if (size > 5) {
+            zSet.removeRange("moneyRank", 0, size -6);
+        }
 
 //            缓存中有数据，放入map中
         assert moneyRank != null;

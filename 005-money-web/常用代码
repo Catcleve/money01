@@ -1,0 +1,52 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+
+<link href="/crm/jquery/layer/theme/default/layer.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="/crm/jquery/layer/layer/layer.js"></script>
+
+//修改模糊查询样式
+$(".input-group-addon").css("width","90px")
+<div style="height: 0; width: 101%;  left: -13px; position: relative; top : 50px;"></div>
+
+$.get("",{},function(data){},'json');
+$.post("",{},function(data){},'json');
+layer.msg(result.message, {icon: 5});
+<body style="overflow-x:hidden;overflow-y:auto">
+    <script type="text/javascript" src="/crm/jquery/layer/layer/layer.js"></script>
+    <script type="text/javascript" src="/crm/jquery/ajaxfileupload.js"></script>
+
+
+    <link href="/crm/jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+    <link href="/crm/jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css"
+          type="text/css" rel="stylesheet"/>
+
+    <script type="text/javascript" src="/crm/jquery/jquery-1.11.1-min.js"></script>
+    <script type="text/javascript" src="/crm/jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+            src="/crm/jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript"
+            src="/crm/jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"
+            charset="UTF-8"></script>
+
+
+    <link href="/crm/jquery/bs_pagination/jquery.bs_pagination.min.css" type="text/css" rel="stylesheet"/>
+    <script type="text/javascript" src="/crm/jquery/bs_pagination/en.js" charset=”gb2312″></script>
+    <script type="text/javascript" src="/crm/jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+
+
+    <script type="text/javascript" src="/crm/jquery/layer/layer/layer.js"></script>
+    <script type="text/javascript" src="/crm/jquery/ajaxfileupload.js"></script>
+
+
+        //回显下拉框，返回含有user id和name的对象
+        function opSelect($select) {
+
+            //从父元素拿到缓存的user信息对象，参考src/main/webapp/WEB-INF/workbench/index.jsp下方
+            let user = window.parent.userMap;
+            //遍历，建立下拉框
+            $.each(user, function (index, item) {
+                $select.append(`<option value='` + index + `'>` + item + `</option>`)
+            });
+            //返回  给需要回显下拉框的编辑页面使用
+            return user;
+        }

@@ -62,7 +62,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.wang.money</groupId>
+            <groupId>com.wang</groupId>
             <artifactId>004-money-common</artifactId>
             <version>1.0.0</version>
         </dependency>

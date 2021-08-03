@@ -1,5 +1,7 @@
 package service;
 
+import model.User;
+
 /**
  * 用户公共接口
  * @author 毛能能
@@ -10,4 +12,18 @@ public interface UserService {
      * @return 用户数量
      */
     Long queryAllUser();
+
+    /**
+     * 注册页面：通过手机号查询用户
+     * @param phone 注册的手机号
+     * @return 有或者没有
+     */
+    boolean queryUserByPhone(String phone);
+
+    /**
+     * 注册用户
+     * @param user 用户提交的数据封装
+     * @return 跳转视图
+     */
+    User register(User user);
 }

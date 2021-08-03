@@ -32,7 +32,7 @@
       #{name,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, #{addTime,jdbcType=TIMESTAMP}, 
       #{lastLoginTime,jdbcType=TIMESTAMP}, #{headerImage,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="model.User">
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="model.User">
     insert into u_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -128,5 +128,10 @@
 
   <select id="selectAllCount" resultType="long">
     select count(1) from u_user
+  </select>
+
+<!--  注册页面：通过手机号查询用户-->
+  <select id="selectByPhone" resultType="int">
+    select count(1) from u_user where phone = #{phone}
   </select>
 </mapper>

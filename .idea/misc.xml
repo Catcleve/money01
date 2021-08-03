@@ -6,12 +6,12 @@
         <option value="$PROJECT_DIR$/001-money-parent/pom.xml" />
         <option value="$PROJECT_DIR$/002-money-exterface/pom.xml" />
         <option value="$PROJECT_DIR$/003-money-dataservice/pom.xml" />
-        <option value="$PROJECT_DIR$/004-money-common/pom.xml" />
         <option value="$PROJECT_DIR$/005-money-web/pom.xml" />
+        <option value="$PROJECT_DIR$/004-money-common/pom.xml" />
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
