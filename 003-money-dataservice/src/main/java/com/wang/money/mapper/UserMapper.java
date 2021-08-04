@@ -1,6 +1,6 @@
 package com.wang.money.mapper;
 
-import model.User;
+import com.wang.money.model.User;
 import org.springframework.stereotype.Repository;
 
 /**

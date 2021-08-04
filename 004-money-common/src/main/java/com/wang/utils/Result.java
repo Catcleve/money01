@@ -7,7 +7,7 @@ package com.wang.utils;
 
 public class Result {
 
-//    成功为0，失败为1
+//    成功为1，失败为0
     private Integer code;
 
     private String message;

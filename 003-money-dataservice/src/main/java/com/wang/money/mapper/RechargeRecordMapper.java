@@ -1,7 +1,7 @@
 package com.wang.money.mapper;
 
 
-import model.RechargeRecord;
+import com.wang.money.model.RechargeRecord;
 
 public interface RechargeRecordMapper {
     int deleteByPrimaryKey(Integer id);

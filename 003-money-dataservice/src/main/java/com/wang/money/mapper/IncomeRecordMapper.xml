@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wang.money.mapper.IncomeRecordMapper">
-  <resultMap id="BaseResultMap" type="model.IncomeRecord">
+  <resultMap id="BaseResultMap" type="com.wang.money.model.IncomeRecord">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="uid" jdbcType="INTEGER" property="uid" />
     <result column="loan_id" jdbcType="INTEGER" property="loanId" />
@@ -24,7 +24,7 @@
     delete from b_income_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="model.IncomeRecord">
+  <insert id="insert" parameterType="com.wang.money.model.IncomeRecord">
     insert into b_income_record (id, uid, loan_id, 
       bid_id, bid_money, income_date, 
       income_money, income_status)
@@ -32,7 +32,7 @@
       #{bidId,jdbcType=INTEGER}, #{bidMoney,jdbcType=DOUBLE}, #{incomeDate,jdbcType=DATE}, 
       #{incomeMoney,jdbcType=DOUBLE}, #{incomeStatus,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="model.IncomeRecord">
+  <insert id="insertSelective" parameterType="com.wang.money.model.IncomeRecord">
     insert into b_income_record
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -87,7 +87,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="model.IncomeRecord">
+  <update id="updateByPrimaryKeySelective" parameterType="com.wang.money.model.IncomeRecord">
     update b_income_record
     <set>
       <if test="uid != null">
@@ -114,7 +114,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="model.IncomeRecord">
+  <update id="updateByPrimaryKey" parameterType="com.wang.money.model.IncomeRecord">
     update b_income_record
     set uid = #{uid,jdbcType=INTEGER},
       loan_id = #{loanId,jdbcType=INTEGER},

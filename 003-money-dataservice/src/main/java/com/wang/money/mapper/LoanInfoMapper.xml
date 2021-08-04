@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wang.money.mapper.LoanInfoMapper">
-  <resultMap id="BaseResultMap" type="model.LoanInfo">
+  <resultMap id="BaseResultMap" type="com.wang.money.model.LoanInfo">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="product_name" jdbcType="VARCHAR" property="productName" />
     <result column="rate" jdbcType="DOUBLE" property="rate" />
@@ -33,7 +33,7 @@
     delete from b_loan_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="model.LoanInfo">
+  <insert id="insert" parameterType="com.wang.money.model.LoanInfo">
     insert into b_loan_info (id, product_name, rate, 
       cycle, release_time, product_type, 
       product_no, product_money, left_product_money, 
@@ -47,7 +47,7 @@
       #{productFullTime,jdbcType=TIMESTAMP}, #{productDesc,jdbcType=VARCHAR}, #{version,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="model.LoanInfo">
+  <insert id="insertSelective" parameterType="com.wang.money.model.LoanInfo">
     insert into b_loan_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -144,7 +144,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="model.LoanInfo">
+  <update id="updateByPrimaryKeySelective" parameterType="com.wang.money.model.LoanInfo">
     update b_loan_info
     <set>
       <if test="productName != null">
@@ -192,7 +192,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="model.LoanInfo">
+  <update id="updateByPrimaryKey" parameterType="com.wang.money.model.LoanInfo">
     update b_loan_info
     set product_name = #{productName,jdbcType=VARCHAR},
       rate = #{rate,jdbcType=DOUBLE},

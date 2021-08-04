@@ -3,7 +3,6 @@ package com.wang.money.service;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.wang.money.mapper.FinanceAccountMapper;
 import org.springframework.stereotype.Component;
-import service.FinanceAccountService;
 
 import javax.annotation.Resource;
 

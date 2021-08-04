@@ -1,8 +1,7 @@
 package com.wang.money.mapper;
 
 
-import model.LoanInfo;
-import org.springframework.stereotype.Repository;
+import com.wang.money.model.LoanInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,7 @@ import java.util.Map;
  * 产品信息表接口
  * @author 毛能能
  */
-@Repository
+
 public interface LoanInfoMapper {
     int deleteByPrimaryKey(Integer id);
 

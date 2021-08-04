@@ -1,7 +1,7 @@
 package com.wang.money.mapper;
 
 
-import model.IncomeRecord;
+import com.wang.money.model.IncomeRecord;
 
 public interface IncomeRecordMapper {
     int deleteByPrimaryKey(Integer id);

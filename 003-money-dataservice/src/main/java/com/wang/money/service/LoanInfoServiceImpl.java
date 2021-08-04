@@ -1,16 +1,19 @@
 package com.wang.money.service;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wang.money.mapper.LoanInfoMapper;
-import model.LoanInfo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.wang.money.model.LoanInfo;
+import com.wang.utils.Constant;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import service.LoanInfoService;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 首页平均年利率查询
@@ -20,12 +23,30 @@ import java.util.Map;
 @Component
 public class LoanInfoServiceImpl implements LoanInfoService {
 
-    @Autowired
+    @Resource
     private LoanInfoMapper loanInfoMapper;
 
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
+    /**
+     * 查询平均年化收益率
+     * @return 收益率
+     */
     @Override
     public Double queryAvgRate() {
-        return loanInfoMapper.selectAvgRate();
+
+        Double avgRate = (Double) redisTemplate.opsForValue().get(Constant.AVG_RATE);
+        if (ObjectUtil.isNull(avgRate)) {
+            synchronized (this){
+                if (ObjectUtil.isNull(redisTemplate.opsForValue().get(Constant.AVG_RATE))) {
+                    avgRate = loanInfoMapper.selectAvgRate();
+                    redisTemplate.opsForValue().set(Constant.AVG_RATE,avgRate,1, TimeUnit.DAYS);
+                }
+            }
+        }
+
+        return avgRate;
     }
 
     /**

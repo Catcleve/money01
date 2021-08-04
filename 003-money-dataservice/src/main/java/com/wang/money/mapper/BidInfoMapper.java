@@ -1,10 +1,10 @@
 package com.wang.money.mapper;
 
-
-import model.BidInfo;
+import com.wang.money.model.BidInfo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
 
 @Repository
 public interface BidInfoMapper {

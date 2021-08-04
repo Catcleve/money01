@@ -1,17 +1,20 @@
 package com.wang.money.service;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.wang.money.mapper.BidInfoMapper;
-import model.BidInfo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.wang.utils.Constant;
+import com.wang.money.model.BidInfo;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
-import service.BidInfoService;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 投资历史接口
@@ -22,30 +25,42 @@ import java.util.*;
 @Component
 public class BidInfoServiceImpl implements BidInfoService {
 
-    @Autowired
+    @Resource
     private BidInfoMapper bidInfoMapper;
 
     @Resource
-    private RedisTemplate<String,String> redisTemplate;
+    private RedisTemplate<String,Object> redisTemplate;
 
     /**
      * 首页：查询投资总额
      * @return 总额
      */
     @Override
-    public Double querySumBidMoney() {
-        return bidInfoMapper.selectSumBidMoney();
+    public Double queryBidMoneySum() {
+
+        Double bidMoneySum = (Double) redisTemplate.opsForValue().get(Constant.BID_MONEY_SUM);
+        if (ObjectUtil.isNull(bidMoneySum)) {
+            synchronized (this){
+                if (ObjectUtil.isNull(redisTemplate.opsForValue().get(Constant.BID_MONEY_SUM))) {
+                    bidMoneySum = bidInfoMapper.selectSumBidMoney();
+                    redisTemplate.opsForValue().set(Constant.BID_MONEY_SUM,bidMoneySum,1, TimeUnit.DAYS);
+                }
+            }
+        }
+        return bidMoneySum;
     }
 
 
     /**
-     * 产品详情页：通过产品id查询差评投资记录，包含用户信息
+     * 产品详情页：通过产品id查询产品投资记录，包含用户信息
      * @return 投标记录
      */
     @Override
-    public List<BidInfo> queryBidInfoContainsUserPhoneByLoanId(Integer loanId) {
+    public PageInfo<BidInfo> queryBidInfoContainsUserPhoneByLoanId(Integer loanId, Integer pageNum) {
 
-        return bidInfoMapper.selectContainsUserPhoneByLoanId(loanId);
+        PageHelper.startPage(pageNum, 10);
+        List<BidInfo> bidInfos = bidInfoMapper.selectContainsUserPhoneByLoanId(loanId);
+        return new PageInfo<>(bidInfos);
     }
 
     /**
@@ -61,13 +76,12 @@ public class BidInfoServiceImpl implements BidInfoService {
 //        用来存放排行榜的的集合，使用LinkedHashMap保持排序
         HashMap<Object, Double> moneyRankMap = new LinkedHashMap<>(5);
 
-        ZSetOperations<String, String> zSet = redisTemplate.opsForZSet();
+        ZSetOperations<String, Object> zSet = redisTemplate.opsForZSet();
 //        先在缓存中查询，如果没有 就从数据库中查出来放入缓存中
-        Set<String> moneyRank = zSet.reverseRange("moneyRank", 0, -1);
+        Set<Object> moneyRank = zSet.reverseRange("moneyRank", 0, -1);
 
         if (moneyRank == null||moneyRank.size() == 0) {
 //            从数据库查询
-            System.out.println("-------------------------数据库查询");
             List<BidInfo> bidInfoAccounts = bidInfoMapper.selectMoneyAndUserPhone();
 
 //            循环隐藏电话号码，放入缓存中
@@ -81,15 +95,15 @@ public class BidInfoServiceImpl implements BidInfoService {
         }
 //            每次查询只保留前五个数据（其他人投资的话会更新redis）
         Long size = zSet.size("moneyRank");
-        if (size > 5) {
+        if (size > Constant.BID_MONEY_RANGE_SIZE) {
             zSet.removeRange("moneyRank", 0, size -6);
         }
 
 //            缓存中有数据，放入map中
         assert moneyRank != null;
-        for (String phone : moneyRank) {
+        for (Object phone : moneyRank) {
             Double score = zSet.score("moneyRank", phone);
-            phone = phone.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+            phone = ((String)phone).replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
             moneyRankMap.put(phone, score);
         }
         return moneyRankMap;

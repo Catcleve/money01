@@ -2,14 +2,13 @@ package com.wang.money.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 
-import model.LoanInfo;
+import com.wang.money.model.LoanInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import service.BidInfoService;
-import service.LoanInfoService;
-import service.UserService;
-import sun.net.www.http.HttpClient;
+import com.wang.money.service.BidInfoService;
+import com.wang.money.service.LoanInfoService;
+import com.wang.money.service.UserService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,34 +48,34 @@ public class IndexController {
     @GetMapping({"/","/index"})
     public String toIndex(Model model){
 
-//        查询平均年化收益率
+        //        查询平均年化收益率
         Double rateAvg = loanInfoService.queryAvgRate();
 
-//        查询注册人数
+        //        查询注册人数
         Long userCount = userService.queryAllUser();
 
-//        查询累计成交金额
-        Double sumBidMoney = bidInfoService.querySumBidMoney();
+        //        查询累计成交金额
+        Double sumBidMoney = bidInfoService.queryBidMoneySum();
 
         /*首页新手宝，因为还要查询其他的，这里把查询条件封装为map
         当属性没有互相关联时，使用map，有关联则使用object
         */
 
 
-//        新手包查询
+        //        新手包查询
         Map<String, Object> queryLoan = new HashMap<>(10);
         queryLoan.put("type", 0);
         queryLoan.put("start", 0);
         queryLoan.put("count", 1);
         List<LoanInfo> loanInfoX = loanInfoService.queryByTypeAndCount(queryLoan);
 
-//        满月包查询
+        //        满月包查询
         queryLoan.put("type", 1);
         queryLoan.put("start", 0);
         queryLoan.put("count", 4);
         List<LoanInfo> loanInfoY = loanInfoService.queryByTypeAndCount(queryLoan);
 
-//        散标查询
+        //        散标查询
         queryLoan.put("type", 2);
         queryLoan.put("start", 0);
         queryLoan.put("count", 8);

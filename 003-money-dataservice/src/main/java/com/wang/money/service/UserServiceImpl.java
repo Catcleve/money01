@@ -1,18 +1,18 @@
 package com.wang.money.service;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.wang.money.mapper.FinanceAccountMapper;
 import com.wang.money.mapper.UserMapper;
-import model.FinanceAccount;
-import model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Transient;
+import com.wang.money.model.FinanceAccount;
+import com.wang.money.model.User;
+import com.wang.utils.Constant;
+import lombok.AllArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import service.FinanceAccountService;
-import service.UserService;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 用户接口实现类
@@ -20,17 +20,39 @@ import java.util.Date;
  */
 @Service(interfaceClass = UserService.class,version = "1.0.0", timeout = 20000)
 @Component
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private FinanceAccountMapper financeAccountMapper;
+    private final FinanceAccountMapper financeAccountMapper;
 
-    @Autowired
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
+    private final RedisTemplate<Object, Object> redisTemplate;
+
+    /**
+     * 查询所有用户
+     * @return 用户数量
+     */
     @Override
     public Long queryAllUser() {
-        return userMapper.selectAllCount();
+
+        redisTemplate.setKeySerializer(redisTemplate.getStringSerializer());
+
+        //先判断redis中有没有数据
+        Long allUserCount = (Long) redisTemplate.opsForValue().get(Constant.ALL_USER_COUNT);
+        //如果没有就加锁从数据库查询
+        if (ObjectUtil.isNull(allUserCount)) {
+            synchronized (this){
+                //再次判断redis中有没有数据，以免多线程情况下多个线程阻塞在锁外面，造成多次从数据库查询
+                if (ObjectUtil.isNull(redisTemplate.opsForValue().get(Constant.ALL_USER_COUNT))) {
+                    //数据库查询
+                    allUserCount = userMapper.selectAllCount();
+                    //放入redis的缓存中
+                    redisTemplate.opsForValue().set(Constant.ALL_USER_COUNT,allUserCount,1, TimeUnit.DAYS);
+                }
+            }
+        }
+        return allUserCount;
     }
 
     /**
@@ -70,6 +92,19 @@ public class UserServiceImpl implements UserService {
         financeAccountMapper.insertSelective(financeAccount);
 //        用返回值判断是否成功，如果不成功抛出异常，事务回滚
 
-        return null;
+        return user;
+    }
+
+
+
+    /**
+     * 实名认证
+     * @param tempUser 更新认证信息
+     * @return 是否成功
+     */
+    @Override
+    public boolean updateUser(User tempUser) {
+        int i = userMapper.updateByPrimaryKeySelective(tempUser);
+        return i == 1;
     }
 }

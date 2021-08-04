@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wang.money.mapper.RechargeRecordMapper">
-  <resultMap id="BaseResultMap" type="model.RechargeRecord">
+  <resultMap id="BaseResultMap" type="com.wang.money.model.RechargeRecord">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="uid" jdbcType="INTEGER" property="uid" />
     <result column="recharge_no" jdbcType="VARCHAR" property="rechargeNo" />
@@ -23,7 +23,7 @@
     delete from b_recharge_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="model.RechargeRecord">
+  <insert id="insert" parameterType="com.wang.money.model.RechargeRecord">
     insert into b_recharge_record (id, uid, recharge_no, 
       recharge_status, recharge_money, recharge_time, 
       recharge_desc)
@@ -31,7 +31,7 @@
       #{rechargeStatus,jdbcType=VARCHAR}, #{rechargeMoney,jdbcType=DOUBLE}, #{rechargeTime,jdbcType=TIMESTAMP}, 
       #{rechargeDesc,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="model.RechargeRecord">
+  <insert id="insertSelective" parameterType="com.wang.money.model.RechargeRecord">
     insert into b_recharge_record
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -80,7 +80,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="model.RechargeRecord">
+  <update id="updateByPrimaryKeySelective" parameterType="com.wang.money.model.RechargeRecord">
     update b_recharge_record
     <set>
       <if test="uid != null">
@@ -104,7 +104,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="model.RechargeRecord">
+  <update id="updateByPrimaryKey" parameterType="com.wang.money.model.RechargeRecord">
     update b_recharge_record
     set uid = #{uid,jdbcType=INTEGER},
       recharge_no = #{rechargeNo,jdbcType=VARCHAR},

@@ -1,7 +1,7 @@
 package com.wang.money.mapper;
 
 
-import model.FinanceAccount;
+import com.wang.money.model.FinanceAccount;
 import org.springframework.stereotype.Repository;
 
 @Repository

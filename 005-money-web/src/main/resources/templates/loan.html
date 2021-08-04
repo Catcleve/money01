@@ -66,8 +66,6 @@
             <span th:text="|共${pageInfo.total}条${pageInfo.pages}页 当前为第${pageInfo.pageNum}页|">
               共20条3页 当前为第2页
             </span>
-            <!--            <a id="linkHomePage" th:href=|/loan/${pType}/page/${1}|>首页</a>-->
-
             <span th:if="${pageInfo.isFirstPage}">
               <a  href="javascript:;">首页 </a>
               <a  href="javascript:;">上一页</a>
@@ -76,7 +74,6 @@
               <a id="linkHomePage" th:href="@{'/loan/'+ ${pType} +'/page/' + 1}">首页</a>
               <a id="linkPreviousPage" th:href="@{'/loan/'+ ${pType} +'/page/' + ${pageInfo.prePage}}">上一页</a>
             </span>
-
             <span th:if="${pageInfo.isLastPage}">
               <a  href="javascript:;">下一页 </a>
               <a  href="javascript:;">尾页</a>

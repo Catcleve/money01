@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wang.money.mapper.FinanceAccountMapper">
-  <resultMap id="BaseResultMap" type="model.FinanceAccount">
+  <resultMap id="BaseResultMap" type="com.wang.money.model.FinanceAccount">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="uid" jdbcType="INTEGER" property="uid" />
     <result column="available_money" jdbcType="DOUBLE" property="availableMoney" />
   </resultMap>
 
 <!--  新建resultMap,注入user对象-->
-  <resultMap id="BaseResultMap2" type="model.FinanceAccount">
+  <resultMap id="BaseResultMap2" type="com.wang.money.model.FinanceAccount">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="uid" jdbcType="INTEGER" property="uid" />
     <result column="available_money" jdbcType="DOUBLE" property="availableMoney" />
-    <association property="user" javaType="model.User">
+    <association property="user" javaType="com.wang.money.model.User">
       <result property="phone" column="phone"/>
     </association>
   </resultMap>
@@ -29,13 +29,13 @@
     delete from u_finance_account
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="model.FinanceAccount">
+  <insert id="insert" parameterType="com.wang.money.model.FinanceAccount">
     insert into u_finance_account (id, uid, available_money
       )
     values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{availableMoney,jdbcType=DOUBLE}
       )
   </insert>
-  <insert id="insertSelective" parameterType="model.FinanceAccount">
+  <insert id="insertSelective" parameterType="com.wang.money.model.FinanceAccount">
     insert into u_finance_account
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -60,7 +60,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="model.FinanceAccount">
+  <update id="updateByPrimaryKeySelective" parameterType="com.wang.money.model.FinanceAccount">
     update u_finance_account
     <set>
       <if test="uid != null">
@@ -72,7 +72,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="model.FinanceAccount">
+  <update id="updateByPrimaryKey" parameterType="com.wang.money.model.FinanceAccount">
     update u_finance_account
     set uid = #{uid,jdbcType=INTEGER},
       available_money = #{availableMoney,jdbcType=DOUBLE}
